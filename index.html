@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1A3237" />
+  <title>Roomies</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet" />
+
+
+  <script src="js/core/tema.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/config/tailwind-config.js"></script>
+
+  <!-- Componentes con @apply: el CDN de Tailwind solo procesa este bloque en línea -->
+  <style type="text/tailwindcss">
+    @layer base {
+      /* ===== Paleta por tema (canales RGB para que funcionen los /opacidad de Tailwind) =====
+         Oscuro: verde profundo, texto casi blanco. Claro: pensado para pleno sol, texto verde casi negro.
+         Todo el texto de lectura pasa 4,5:1 sobre las superficies de vidrio en ambos temas. */
+      :root, :root[data-tema="oscuro"] {
+        color-scheme: dark;
+        --c-texto: 244 247 242;  --c-sobre: 19 40 38;
+        --c-tea: 207 224 195;    --c-claro: 220 235 210;  --c-teal: 158 193 163;  --c-tropical: 112 169 161;
+        --c-alerta: 245 212 136; --c-peligro: 255 184 168;
+        --c-alerta-fondo: 67 58 31; --c-peligro-fondo: 74 42 39; --c-acento-fondo: 44 74 69;   /* chips de estado: fondo sólido, texto ≥ 7:1 */
+        --c-fondo-top: 33 62 67; --c-fondo-mid: 22 45 50; --c-fondo-bottom: 14 31 36;
+        --c-velo: 255 255 255;                                   /* tinte de los velos y bordes */
+        --luces: 1; --grano: .07;
+        --vidrio-fondo: rgba(255,255,255,.075); --vidrio-fuerte: rgba(255,255,255,.1);
+        --vidrio-borde: rgba(255,255,255,.16);  --vidrio-reflejo: rgba(255,255,255,.13);
+        --vidrio-canto: rgba(255,255,255,.22);  --vidrio-base: rgba(0,0,0,.16);
+        --vidrio-sombra: 0 16px 36px -14px rgba(3,14,16,.65), 0 2px 8px -3px rgba(3,14,16,.35);
+        --capa: rgba(255,255,255,.065); --capa-tenue: rgba(255,255,255,.035); --capa-fuerte: rgba(255,255,255,.095); --capa-canto: rgba(255,255,255,.1);
+        --barra-fondo: rgba(20,38,42,.6); --barra-sombra: 0 20px 44px -12px rgba(3,14,16,.75);
+        --lente-fondo: rgba(207,224,195,.18); --modal-fondo: rgba(28,50,56,.86);
+        --campo-fondo: rgba(6,20,23,.34); --campo-foco: rgba(6,20,23,.44); --campo-hundido: inset 0 1px 3px 0 rgba(0,0,0,.24);
+        --acento-grad: linear-gradient(100deg, #DCEBD2 0%, #B9D5BA 55%, #9EC1A3 100%);
+        --acento-brillo: rgba(255,255,255,.42); --acento-borde: rgba(255,255,255,.55);
+        --acento-sombra: 0 10px 26px -10px rgba(158,193,163,.6);
+        --foco: #CFE0C3;
+      }
+      :root[data-tema="claro"] {
+        color-scheme: light;
+        --c-texto: 13 36 31;     --c-sobre: 255 255 255;
+        --c-tea: 24 84 68;       --c-claro: 63 142 117;   --c-teal: 42 118 96;    --c-tropical: 38 104 96;
+        --c-alerta: 134 82 0;    --c-peligro: 178 34 24;
+        --c-alerta-fondo: 251 239 214; --c-peligro-fondo: 251 228 225; --c-acento-fondo: 221 238 229;
+        --c-fondo-top: 214 232 221; --c-fondo-mid: 232 242 235; --c-fondo-bottom: 246 250 247;
+        --c-velo: 13 36 31;
+        --luces: .4; --grano: .035;
+        --vidrio-fondo: rgba(255,255,255,.74); --vidrio-fuerte: rgba(255,255,255,.86);
+        --vidrio-borde: rgba(13,36,31,.14);    --vidrio-reflejo: rgba(255,255,255,.7);
+        --vidrio-canto: rgba(255,255,255,.95); --vidrio-base: rgba(13,36,31,.06);
+        --vidrio-sombra: 0 14px 32px -16px rgba(13,36,31,.28), 0 2px 6px -3px rgba(13,36,31,.14);
+        --capa: rgba(255,255,255,.7); --capa-tenue: rgba(255,255,255,.5); --capa-fuerte: rgba(255,255,255,.88); --capa-canto: rgba(255,255,255,.9);
+        --barra-fondo: rgba(255,255,255,.8); --barra-sombra: 0 18px 40px -14px rgba(13,36,31,.3);
+        --lente-fondo: rgba(42,118,96,.14); --modal-fondo: rgba(250,253,251,.94);
+        --campo-fondo: rgba(255,255,255,.92); --campo-foco: #FFFFFF; --campo-hundido: inset 0 1px 2px 0 rgba(13,36,31,.1);
+        --acento-grad: linear-gradient(100deg, #267260 0%, #1F6553 55%, #1A5848 100%);
+        --acento-brillo: rgba(255,255,255,.12); --acento-borde: rgba(13,36,31,.18);
+        --acento-sombra: 0 10px 24px -10px rgba(31,98,80,.55);
+        --foco: #1B5747;
+      }
+      :root {
+        --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+        --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+      }
+      html { -webkit-tap-highlight-color: transparent; }
+      body { font-variation-settings: "opsz" 14; }
+      input, button, select, textarea { font: inherit; color: inherit; }
+      ::selection { background: rgb(var(--c-teal) / .3); }
+    }
+    @layer components {
+      /* Superficies de vidrio líquido: relleno, reflejo en la esquina, canto especular y sombra */
+      .vidrio, .vidrio-fuerte {
+        border: 1px solid var(--vidrio-borde);
+        background-color: var(--vidrio-fondo);
+        background-image: radial-gradient(130% 85% at 0% 0%, var(--vidrio-reflejo), transparent 55%);
+        box-shadow: inset 0 1px 0 0 var(--vidrio-canto), inset 0 -1px 0 0 var(--vidrio-base), var(--vidrio-sombra);
+        -webkit-backdrop-filter: blur(24px) saturate(165%);
+        backdrop-filter: blur(24px) saturate(165%);
+      }
+      .vidrio-fuerte { background-color: var(--vidrio-fuerte); -webkit-backdrop-filter: blur(28px) saturate(175%); backdrop-filter: blur(28px) saturate(175%); }
+      .tarjeta, .capa { background-color: var(--capa); box-shadow: inset 0 1px 0 0 var(--capa-canto); }
+      .tarjeta { border: 1px solid var(--vidrio-borde); }
+      .capa-tenue  { background-color: var(--capa-tenue); }
+      .capa-fuerte { background-color: var(--capa-fuerte); box-shadow: inset 0 1px 0 0 var(--capa-canto); }
+
+      /* Barra inferior flotante y su lente activa */
+      .barra-liquida {
+        background-color: var(--barra-fondo);
+        background-image: radial-gradient(120% 140% at 50% -40%, var(--vidrio-reflejo), transparent 60%);
+        box-shadow: inset 0 1px 0 0 var(--vidrio-canto), inset 0 -1px 0 0 var(--vidrio-base), var(--barra-sombra);
+        -webkit-backdrop-filter: blur(30px) saturate(185%);
+        backdrop-filter: blur(30px) saturate(185%);
+      }
+      .lente {
+        border: 1px solid var(--vidrio-borde);
+        background-color: var(--lente-fondo);
+        background-image: linear-gradient(180deg, var(--vidrio-reflejo), transparent 60%);
+        box-shadow: inset 0 1px 0 0 var(--vidrio-canto), 0 6px 18px -6px rgb(var(--c-teal) / .45);
+      }
+      .modal-vidrio {
+        border: 1px solid var(--vidrio-borde);
+        background-color: var(--modal-fondo);
+        background-image: radial-gradient(120% 70% at 50% 0%, var(--vidrio-reflejo), transparent 60%);
+        box-shadow: inset 0 1px 0 0 var(--vidrio-canto), 0 30px 60px -20px rgba(3,14,16,.55);
+        -webkit-backdrop-filter: blur(32px) saturate(170%);
+        backdrop-filter: blur(32px) saturate(170%);
+      }
+
+      /* Tipografía (texto secundario más firme para leer bajo el sol) */
+      .h1    { @apply font-serif text-[30px] font-medium leading-9 tracking-[-0.15px]; }
+      .h2    { @apply font-serif text-[24px] font-medium leading-[30px] tracking-[-0.12px]; }
+      .h3    { @apply font-serif text-[19px] font-medium leading-6; }
+      .micro { @apply text-[11px] font-semibold uppercase leading-[14px] tracking-[0.22px]; }
+      .tenue { @apply text-texto/[0.78]; }
+      .sec   { @apply text-texto/90; }
+
+      /* Botones · todos responden al toque con scale (100–160 ms, ease-out fuerte) */
+      .btn-icono, .btn-primario, .btn-vidrio, .btn-sec, .btn-acento, .chip {
+        transition-property: transform, background-color, border-color, box-shadow, filter, color;
+        transition-duration: 160ms;
+        transition-timing-function: var(--ease-out);
+      }
+      .btn-icono   { @apply grid size-11 shrink-0 place-items-center rounded-full text-texto active:scale-95;
+                     border: 1px solid var(--vidrio-borde); background-color: var(--capa-fuerte);
+                     box-shadow: inset 0 1px 0 0 var(--vidrio-canto), 0 6px 16px -8px rgba(3,14,16,.4);
+                     -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%); }
+      .btn-icono:hover { background-color: rgb(var(--c-velo) / .12); }
+
+      /* Primario: gota de vidrio con brillo superior (Roomies/Acento/Gradiente) */
+      .btn-primario, .btn-acento, .chip-activo {
+        color: rgb(var(--c-sobre));
+        border: 1px solid var(--acento-borde);
+        background-color: rgb(var(--c-teal));
+        background-image: linear-gradient(180deg, var(--acento-brillo), transparent 55%), var(--acento-grad);
+        box-shadow: inset 0 1px 0 0 var(--acento-brillo), var(--acento-sombra);
+      }
+      .btn-primario { @apply flex h-[54px] w-full items-center justify-center gap-2.5 rounded-[27px] px-6 text-[16px] font-semibold leading-5 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 disabled:saturate-50; }
+      .btn-acento   { @apply flex min-h-11 items-center justify-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[12px] font-semibold leading-4 active:scale-[0.97]; }
+      .btn-primario:hover, .btn-acento:hover { filter: brightness(1.06); }
+
+      .btn-vidrio  { @apply flex h-[54px] w-full items-center justify-center gap-2.5 rounded-[27px] px-6 text-[16px] font-semibold leading-5 text-texto active:scale-[0.97];
+                     border: 1px solid var(--vidrio-borde); background-color: var(--vidrio-fuerte);
+                     box-shadow: inset 0 1px 0 0 var(--vidrio-canto), var(--vidrio-sombra);
+                     -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }
+      .btn-vidrio:hover { background-color: rgb(var(--c-velo) / .12); }
+      .btn-sec     { @apply flex min-h-11 items-center justify-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[12px] font-semibold leading-4 text-texto active:scale-[0.97];
+                     border: 1px solid var(--vidrio-borde); background-color: var(--capa-fuerte); box-shadow: inset 0 1px 0 0 var(--capa-canto); }
+      .btn-sec:hover { background-color: rgb(var(--c-velo) / .12); }
+      .chip        { @apply flex min-h-10 shrink-0 items-center gap-1.5 rounded-[18px] px-3 py-[9px] text-[12px] font-semibold leading-4 text-texto/[0.85] active:scale-[0.97];
+                     border: 1px solid var(--vidrio-borde); background-color: var(--capa); box-shadow: inset 0 1px 0 0 var(--capa-canto); }
+      .chip:hover  { background-color: rgb(var(--c-velo) / .1); color: rgb(var(--c-texto)); }
+      .chip.chip-activo { color: rgb(var(--c-sobre)); border-color: var(--acento-borde); background-color: rgb(var(--c-teal));
+                          box-shadow: inset 0 1px 0 0 var(--acento-brillo), var(--acento-sombra); }
+
+      /* Piezas */
+      .burbuja { @apply grid shrink-0 place-items-center rounded-full border border-acento-tea/25 bg-acento-teal/[0.16] text-acento-tea;
+                 box-shadow: inset 0 1px 0 0 var(--capa-canto); }
+      /* Avatar: fondo pastel con texto oscuro fijo (se lee igual en ambos temas) */
+      .avatar  { @apply grid shrink-0 place-items-center rounded-full font-semibold leading-4 text-[#13302A];
+                 border: 1.5px solid rgba(255,255,255,.55); box-shadow: inset 0 1px 0 0 rgba(255,255,255,.6), 0 4px 10px -4px rgba(3,14,16,.35); }
+      .divisor { @apply h-px w-full bg-texto/[0.12]; }
+      /* Campo: hundido en el vidrio, con halo de acento al enfocar */
+      .campo   { @apply flex items-center gap-3 rounded-2xl px-4 py-[15px];
+                 border: 1px solid var(--vidrio-borde); background-color: var(--campo-fondo); box-shadow: var(--campo-hundido);
+                 transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease; }
+      .campo:focus-within { border-color: rgb(var(--c-teal)); background-color: var(--campo-foco);
+                 box-shadow: var(--campo-hundido), 0 0 0 4px rgb(var(--c-teal) / .2); }
+      .anillo  { @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-acento-tea focus-visible:ring-offset-2 focus-visible:ring-offset-fondo-mid; }
+      .grano { background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27160%27 height=%27160%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.9%27 numOctaves=%272%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E"); opacity: var(--grano); }
+    }
+    @layer utilities {
+      .pt-seguro { padding-top: max(12px, env(safe-area-inset-top)); }
+      .pb-seguro { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+      .sin-scroll::-webkit-scrollbar { display: none; }
+      .sin-scroll { scrollbar-width: none; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
+
+<body class="min-h-[100dvh] bg-fondo-bottom font-sans text-texto antialiased">
+
+  <!-- Fondo fijo: gradiente + brillos (Roomies/Fondo/Gradiente) -->
+  <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-gradient-to-b from-fondo-top via-fondo-mid via-[50%] to-fondo-bottom">
+    <!-- Luces que el vidrio refracta (más suaves en modo claro) -->
+    <div class="absolute inset-0" style="opacity:var(--luces)">
+    <div class="absolute right-[-28%] top-[-12%] aspect-square w-[85vw] max-w-[640px] rounded-full bg-acento-teal/[0.28] blur-[110px] md:right-[-4%] md:blur-[150px]"></div>
+    <div class="absolute bottom-[-18%] left-[-32%] aspect-square w-[80vw] max-w-[600px] rounded-full bg-acento-tropical/[0.30] blur-[110px] md:left-[-6%] md:blur-[150px]"></div>
+    <div class="absolute left-[30%] top-[38%] aspect-square w-[40vw] max-w-[320px] rounded-full bg-alerta/[0.06] blur-[100px]"></div>
+    </div>
+    <!-- Grano fino: evita bandas en los degradados -->
+    <div class="grano absolute inset-0 mix-blend-overlay"></div>
+  </div>
+
+  <!-- Barra lateral (escritorio) -->
+  <aside id="lateral" aria-label="Navegación principal"
+         class="fixed inset-y-0 left-0 z-30 hidden w-[88px] flex-col gap-5 barra-liquida border-r border-velo/[0.1] p-3 lg:w-[264px] lg:gap-6 lg:p-6"></aside>
+
+  <!-- Vista actual -->
+  <main id="app" class="relative min-h-[100dvh]"></main>
+
+  <!-- Barra inferior (móvil y tablet) -->
+  <nav id="barra" aria-label="Navegación principal"
+       class="fixed inset-x-4 bottom-[max(16px,env(safe-area-inset-bottom))] z-30 mx-auto hidden h-[72px] max-w-[440px] grid-cols-6 items-center rounded-[30px] border border-velo/[0.14] barra-liquida px-2 md:!hidden"></nav>
+
+  <div id="capa-modal"></div>
+  <div id="aviso" role="status" aria-live="polite"
+       class="pointer-events-none fixed inset-x-4 bottom-[104px] z-50 mx-auto flex w-fit max-w-[calc(100%-2rem)] translate-y-3 items-center gap-2.5 rounded-[22px] border border-acento-teal/60 modal-vidrio px-4 py-3 opacity-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] md:bottom-8 md:left-[88px] lg:left-[264px]"></div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+  <script src="js/config/supabase-config.js"></script>
+  <script src="js/core/iconos.js"></script>
+  <script src="js/core/utilidades.js"></script>
+  <script src="js/core/estado.js"></script>
+  <script src="js/core/router.js"></script>
+  <script src="js/core/nube.js"></script>
+  <script src="js/core/acciones.js"></script>
+  <script src="js/componentes/avatar.js"></script>
+  <script src="js/componentes/interruptor.js"></script>
+  <script src="js/componentes/encabezado.js"></script>
+  <script src="js/componentes/chip-vence.js"></script>
+  <script src="js/componentes/fila-tarea.js"></script>
+  <script src="js/componentes/navegacion.js"></script>
+  <script src="js/componentes/aviso.js"></script>
+  <script src="js/componentes/modal.js"></script>
+  <script src="js/componentes/dialogo-rechazo.js"></script>
+  <script src="js/componentes/panel-imagen.js"></script>
+  <script src="js/pantallas/onboarding/bienvenida.js"></script>
+  <script src="js/pantallas/onboarding/crear-o-unirse.js"></script>
+  <script src="js/pantallas/onboarding/configurar-hogar.js"></script>
+  <script src="js/pantallas/onboarding/codigo.js"></script>
+  <script src="js/pantallas/onboarding/unirse.js"></script>
+  <script src="js/pantallas/onboarding/esperando.js"></script>
+  <script src="js/pantallas/miembros/miembros.js"></script>
+  <script src="js/pantallas/perfil/perfil.js"></script>
+  <script src="js/pantallas/login/login.js"></script>
+  <script src="js/pantallas/registro/registro.js"></script>
+  <script src="js/pantallas/inicio/inicio.js"></script>
+  <script src="js/pantallas/tareas/lista.js"></script>
+  <script src="js/pantallas/tareas/nueva.js"></script>
+  <script src="js/pantallas/tareas/detalle.js"></script>
+  <script src="js/pantallas/avisos/avisos.js"></script>
+  <script src="js/pantallas/gastos/lista.js"></script>
+  <script src="js/pantallas/gastos/detalle.js"></script>
+  <script src="js/pantallas/gastos/nuevo.js"></script>
+  <script src="js/pantallas/chat/chat.js"></script>
+  <script src="js/pantallas/sistema/sistema.js"></script>
+  <script src="js/acciones/comunes.js"></script>
+  <script src="js/acciones/login.js"></script>
+  <script src="js/acciones/registro.js"></script>
+  <script src="js/acciones/onboarding.js"></script>
+  <script src="js/acciones/miembros.js"></script>
+  <script src="js/acciones/tareas.js"></script>
+  <script src="js/acciones/avisos.js"></script>
+  <script src="js/acciones/gastos.js"></script>
+  <script src="js/core/main.js"></script>
+</body>
+</html>
