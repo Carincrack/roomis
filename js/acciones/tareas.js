@@ -15,6 +15,7 @@ Object.assign(ACC, {
   },
   'filtro-tareas': el => { S.filtroTareas = el.dataset.id; if (location.hash.includes('?')) { history.replaceState(null, '', '#/tareas'); } refrescar(); },
   'asignar': el => { S.borrador.asignado = el.dataset.id; refrescar(); },
+  'lugar-borrador': el => { S.borrador.lugar = el.dataset.id; refrescar(); },
   'alerta-borrador': el => { const k = el.dataset.id; S.borrador.alertas[k] = !S.borrador.alertas[k]; refrescar(); },
   'borrador:avisar': () => { S.borrador.avisar = !S.borrador.avisar; refrescar(); },
   'borrador:repetir': () => { S.borrador.repetir = !S.borrador.repetir; refrescar(); },
@@ -26,7 +27,7 @@ Object.assign(ACC, {
     }
     let asignado = b.asignado;
     if (asignado === 'rotar') { const c = {}; S.miembros.forEach(m => c[m] = pendientes().filter(t => t.asignado === m).length); asignado = [...S.miembros].sort((a, z) => c[a] - c[z])[0]; }
-    const campos = { titulo: b.titulo.trim(), asignado, vence: new Date(b.fecha), repite: b.repetir, alertas: Object.keys(b.alertas).filter(k => b.alertas[k]), avisar: b.avisar };
+    const campos = { titulo: b.titulo.trim(), lugar: b.lugar || 'Casa', asignado, vence: new Date(b.fecha), repite: b.repetir, alertas: Object.keys(b.alertas).filter(k => b.alertas[k]), avisar: b.avisar };
     if (editando) {
       const antes = { ...editando }; Object.assign(editando, campos);
       S.borrador = null; S.editando = null; ir('#/tarea/' + editando.id);

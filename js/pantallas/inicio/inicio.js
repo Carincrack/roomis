@@ -3,6 +3,7 @@ function textoActividad(a) {
   if (a.tipo === 'solicitud') return `${esc(persona(a.persona).nombre)} quiere unirse`;
   if (a.tipo === 'gasto') { const g = gasto(a.gasto); return g ? `Se registró ${esc(g.titulo)} · ${crc(g.monto)}` : 'Gasto registrado'; }
   const t = tarea(a.tarea); const n = t ? `“${esc(t.titulo)}”` : 'Una tarea';
+  if (a.tipo === 'nfc') { const l = t && lugarPorNombre(t.lugar); return `${a.persona === S.yo ? 'Marcaste' : esc(persona(a.persona).corto) + ' marcó'} ${n}${l ? ' ' + enLugar(l) : ''}`; }
   return a.tipo === 'vencida' ? `${n} se venció` : `${n} está por vencer`;
 }
 P.inicio = () => {
@@ -59,7 +60,7 @@ P.inicio = () => {
 
           <div class="flex items-start justify-between px-1 xs:px-0">
             ${accion('mas', 'Nueva tarea', '#/nueva-tarea', true)}
-            ${accion('usuario-mas', 'Asignar', '#/nueva-tarea')}
+            ${accion('nfc', 'Etiquetas', '#/etiquetas')}
             ${accion('billetera', 'Gasto', '#/nuevo-gasto')}
             ${accion('usuarios', 'Miembros', '#/miembros')}
           </div>
@@ -77,7 +78,7 @@ P.inicio = () => {
         <aside class="hidden flex-col gap-3.5 xl:flex" aria-label="Actividad del hogar">
           <h2 class="h3">Actividad reciente</h2>
           <div class="vidrio flex flex-col gap-3 rounded-[22px] p-4">
-            ${S.avisos.slice(0, 4).map((a, i) => `${i ? '<div class="divisor"></div>' : ''}<a href="#/avisos" class="flex items-start gap-3 rounded-xl transition hover:opacity-80"><span class="burbuja size-8">${ic(a.cat === 'tareas' ? 'tareas' : a.cat === 'gastos' ? 'billetera' : 'usuario-mas', 'size-4')}</span><span class="flex min-w-0 flex-1 flex-col"><span class="text-[14px] font-medium leading-5">${textoActividad(a)}</span><span class="text-[12px] leading-4 tenue">${cap(diaPalabra(a.hora))} · ${hora(a.hora)}</span></span></a>`).join('')}
+            ${S.avisos.slice(0, 4).map((a, i) => `${i ? '<div class="divisor"></div>' : ''}<a href="#/avisos" class="flex items-start gap-3 rounded-xl transition hover:opacity-80"><span class="burbuja size-8">${ic(a.tipo === 'nfc' ? 'nfc' : a.cat === 'tareas' ? 'tareas' : a.cat === 'gastos' ? 'billetera' : 'usuario-mas', 'size-4')}</span><span class="flex min-w-0 flex-1 flex-col"><span class="text-[14px] font-medium leading-5">${textoActividad(a)}</span><span class="text-[12px] leading-4 tenue">${cap(diaPalabra(a.hora))} · ${hora(a.hora)}</span></span></a>`).join('')}
           </div>
           <div class="flex items-center justify-between"><h2 class="h3">Gastos recientes</h2><a href="#/gastos" class="text-[12px] font-medium text-acento-teal hover:text-acento-tea">Ver todos</a></div>
           <div class="vidrio flex flex-col gap-3 rounded-[22px] p-4">

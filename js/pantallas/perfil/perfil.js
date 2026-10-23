@@ -40,6 +40,7 @@ P.perfil = () => {
             <p class="micro tenue px-1 pb-1 pt-1">Mi hogar</p>
             ${enlace('usuarios', 'Miembros', n ? `<span class="rounded-lg bg-alerta px-2 py-0.5 text-[12px] font-semibold text-sobre">${n} ${n === 1 ? 'solicitud' : 'solicitudes'}</span>` : `<span class="text-[13px] tenue">${S.miembros.length}</span>`, 'href="#/miembros"')}
             ${enlace('usuario-mas', 'Invitar con código', `<span class="font-serif text-[15px] tracking-[0.12em] text-acento-tea">${S.hogar.codigo}</span>`, 'href="#/codigo"')}
+            ${enlace('nfc', 'Etiquetas NFC', `<span class="text-[13px] tenue">${LUGARES.length} lugares</span>`, 'href="#/etiquetas"')}
           </section>
         </div>
         <div class="flex flex-col gap-3.5">

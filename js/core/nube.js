@@ -146,6 +146,10 @@ function notificarNuevo(col, f) {
   }
   if (col === 'tareas' && f.asignado === S.yo && f.por !== S.yo) aviso(`${esc(persona(f.por).corto)} te asignó “${esc(f.titulo)}”`, 'alerta');
   if (col === 'avisos') S.sinLeer = true;
+  if (col === 'avisos' && f.tipo === 'nfc' && f.persona !== S.yo) {
+    const t = tarea(f.tarea);
+    if (t) aviso(`${esc(persona(f.persona).corto)} marcó “${esc(t.titulo)}” con la etiqueta${lugarPorNombre(t.lugar) ? ' ' + delLugar(lugarPorNombre(t.lugar)) : ''}`);
+  }
   if (col === 'miembros' && f.estado === 'pendiente' && soyAdmin()) aviso(`${esc(persona(f.perfil_id).corto)} quiere unirse al hogar`, 'alerta');
 }
 

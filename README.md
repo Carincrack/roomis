@@ -43,3 +43,14 @@ js/
 - **Cuenta de prueba:** `bairon@roomies.cr` / `roomies2026` (la crea la migración, sin hogar). Botón «Usar la cuenta de prueba» en el login.
 - `js/core/nube.js`: sesión, carga del hogar, sincronización por diferencias y Realtime (también presencia y «está escribiendo» del chat).
 - Si el proyecto exige confirmar el correo, los registros nuevos deben confirmarlo antes de entrar (o desactiva *Confirm email* en Authentication → Sign In / Providers para pruebas).
+
+## Etiquetas NFC (computación ubicua)
+
+Cada lugar de la casa (cocina, baño, sala, lavandería, basurero, patio) puede llevar una etiqueta NFC que guarda solo un enlace: `https://<donde-esté-publicado>/#/nfc/cocina?nfc=1`.
+
+- Al acercar el teléfono, Android o iPhone abren ese enlace y Roomies muestra las tareas de ese lugar: primero las tuyas, luego las de otros y lo último que se hizo ahí.
+- **Marcar como hecha** crea un aviso para el hogar («Bairon marcó “Lavar los platos” en la cocina»), que llega en tiempo real. Siempre hay **Deshacer**.
+- **Marcar al tocar** (en Perfil → Etiquetas NFC) marca de una vez tu única tarea de ese lugar. Sirve para comparar las dos variantes en el plan de evaluación.
+- Sin etiquetas a mano, **Simular toque** recrea el gesto. En Chrome para Android (con HTTPS) aparecen **Leer una etiqueta** y **Grabar** (Web NFC). En los demás navegadores, el botón copia el enlace para grabarlo con una app como NFC Tools.
+- No hace falta cambiar la base: se usa la columna `lugar` que ya tenía `tareas`. Al crear una tarea se elige el lugar.
+- Para usar etiquetas reales, Roomies tiene que estar publicado en internet (por ejemplo, en GitHub Pages). El enlace de una copia local solo funciona en esa computadora.

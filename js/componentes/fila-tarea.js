@@ -7,7 +7,7 @@ function filaTarea(t) {
         class="grid size-6 shrink-0 place-items-center rounded-lg border-[1.5px] transition ${hecha ? 'border-acento-tea bg-acento-tea text-sobre' : 'border-texto/40 hover:border-acento-tea'}">${hecha ? ic('check', 'size-3.5', 2.4) : ''}</button>
       <a href="#/tarea/${t.id}" class="flex min-w-0 flex-1 flex-col gap-1.5 rounded-lg">
         <span class="truncate text-[16px] font-semibold leading-[22px] ${hecha ? 'text-texto/[0.78] line-through decoration-texto/50' : ''}">${esc(t.titulo)}</span>
-        <span class="flex items-center gap-2">${chipVence(t)}<span class="truncate text-[13px] leading-[18px] tenue">${nombreCorto(t.asignado)}</span></span>
+        <span class="flex items-center gap-2">${chipVence(t)}<span class="truncate text-[13px] leading-[18px] tenue">${nombreCorto(t.asignado)}${t.lugar && t.lugar !== 'Casa' ? ` · ${esc(t.lugar)}` : ''}</span></span>
       </a>
       ${avatar(t.asignado, 32, 12)}
     </article>`;

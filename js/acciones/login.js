@@ -8,7 +8,7 @@ Object.assign(ACC, {
     conCarga(document.getElementById('btn-entrar'), 'Entrando…', async () => {
       try {
         const destino = await AUTH.entrar(correo, clave);
-        location.hash = destino;
+        location.hash = tomarVuelta(destino);
         aviso(`Hola, ${esc(persona(S.yo).corto)}`);
       } catch (e) { errorCampo('login-clave', mensajeError(e)); }
     });

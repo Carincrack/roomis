@@ -22,6 +22,13 @@ P.avisos = () => {
         `Solicitud con el código ${S.hogar.codigo.slice(0,3)}·${S.hogar.codigo.slice(3)}`,
         pendiente ? `<a href="#/miembros" class="btn-acento px-3 py-2 rounded-xl">Revisar solicitud</a>` : `<span class="text-[12px] font-medium text-acento-teal">Ya respondiste</span>`);
     }
+    if (a.tipo === 'nfc') {
+      const t = tarea(a.tarea); if (!t) return '';
+      const l = lugarPorNombre(t.lugar), quien = a.persona === S.yo ? 'Marcaste' : `${esc(persona(a.persona).corto)} marcó`;
+      return base('border-texto/[0.14]', 'burbuja', 'nfc', `${quien} “${esc(t.titulo)}”`, a.hora,
+        `Con la etiqueta ${l ? delLugar(l) : 'NFC'}${t.asignado !== a.persona ? ` · le tocaba a ${t.asignado === S.yo ? 'ti' : esc(persona(t.asignado).corto)}` : ''}${t.estado === 'completada' ? '' : ' · se volvió a abrir'}`,
+        `<a href="#/tarea/${t.id}" class="btn-sec px-3 py-2 rounded-xl">Ver tarea</a>`);
+    }
     if (a.tipo === 'gasto') {
       const g = gasto(a.gasto); if (!g) return '';
       return base('border-texto/[0.14]', 'burbuja', 'billetera', `${persona(g.pago).corto} registró ${esc(g.titulo)} · ${crc(g.monto)}`, a.hora,

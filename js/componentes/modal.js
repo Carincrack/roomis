@@ -60,6 +60,7 @@ const AYUDA = {
   tareas: ['Cómo funcionan las tareas', ['Toca el cuadro de una tarea para marcarla como hecha.', 'Si te equivocas, usa «Deshacer» en el aviso que aparece.', 'Usa los filtros y el buscador para encontrar tareas por persona o estado.']],
   nueva:  ['Crear y asignar tareas', ['Elige a quién se asigna o usa «Rotar» para repartirla de forma justa.', 'Las alertas te recuerdan antes de que venza.', 'Con «Repetir» la tarea vuelve cada semana.']],
   gastos: ['Cómo se dividen los gastos', ['Cada gasto se reparte en partes iguales entre las personas elegidas.', 'Quien pagó ya tiene su parte saldada.', 'Marca «Pagar mi parte» cuando le devuelvas el dinero a quien pagó.']],
+  nfc:    ['Etiquetas NFC', ['Pega una etiqueta en cada lugar: cocina, baño, basurero…', 'Acerca la parte de atrás del teléfono y Roomies abre las tareas de ese lugar.', 'Si marcas algo por error, usa «Deshacer» en el aviso que aparece.']],
   nuevo:  ['Agregar un gasto', ['Escribe qué se compró y el monto total en colones.', 'Indica quién pagó y entre quiénes se divide.', 'Cada persona verá cuánto le toca antes de guardar.']],
 };
 function dialogoAyuda(tema) {

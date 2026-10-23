@@ -17,14 +17,22 @@ function ruta() {
   const partes = path.split('/').filter(Boolean);
   return { nombre: partes[0] || 'login', id: partes[1], q: new URLSearchParams(qs || '') };
 }
-const APP = new Set(['inicio', 'tareas', 'nueva-tarea', 'editar-tarea', 'tarea', 'perfil', 'avisos', 'miembros', 'gastos', 'gasto', 'nuevo-gasto', 'chat', 'codigo']);
+const APP = new Set(['inicio', 'tareas', 'nueva-tarea', 'editar-tarea', 'tarea', 'perfil', 'avisos', 'miembros', 'gastos', 'gasto', 'nuevo-gasto', 'chat', 'codigo', 'etiquetas', 'nfc']);
 const PUBLICAS = new Set(['login', 'registro', 'sistema']);
 const SIN_HOGAR = new Set(['bienvenida', 'crear-o-unirse', 'configurar-hogar', 'unirse']);
+
+/* Si alguien toca una etiqueta NFC sin sesión, después de entrar vuelve a ese lugar */
+function recordarVuelta() { try { sessionStorage.setItem('roomies:volver', location.hash); } catch {} }
+function tomarVuelta(destino) {
+  let v = null;
+  try { v = sessionStorage.getItem('roomies:volver'); sessionStorage.removeItem('roomies:volver'); } catch {}
+  return v && destino === '#/inicio' ? v : destino;
+}
 
 /* A dónde debe ir cada quien según su sesión y su hogar (null = puede quedarse) */
 function destinoPermitido(nombre) {
   if (!NUBE.listo) return PUBLICAS.has(nombre) ? null : 'cargando';
-  if (!NUBE.sesion) return PUBLICAS.has(nombre) ? null : '#/login';
+  if (!NUBE.sesion) { if (nombre === 'nfc') recordarVuelta(); return PUBLICAS.has(nombre) ? null : '#/login'; }
   const casa = tieneHogar() ? '#/inicio' : S.miEstado === 'pendiente' ? '#/esperando' : '#/bienvenida';
   if (nombre === 'login' || nombre === 'registro') return casa;
   if (APP.has(nombre)) return tieneHogar() ? null : casa;

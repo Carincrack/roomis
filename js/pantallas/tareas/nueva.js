@@ -1,14 +1,16 @@
 /* ---------- C3 · Crear y asignar tarea ---------- */
 function nuevoBorrador() {
   const f = new Date(Date.now() + 5 * D); f.setHours(18, 0, 0, 0);
-  return { titulo: '', asignado: S.yo, fecha: f, alertas: { '1d': true, '3h': true, '30m': false }, avisar: true, repetir: false };
+  return { titulo: '', lugar: 'Casa', asignado: S.yo, fecha: f, alertas: { '1d': true, '3h': true, '30m': false }, avisar: true, repetir: false };
 }
 function borradorDeTarea(t) {
   const a = t.alertas;
-  return { titulo: t.titulo, asignado: t.asignado, fecha: new Date(t.vence), alertas: { '1d': a.includes('1d'), '3h': a.includes('3h'), '30m': a.includes('30m') }, avisar: !!t.avisar, repetir: !!t.repite };
+  return { titulo: t.titulo, lugar: t.lugar || 'Casa', asignado: t.asignado, fecha: new Date(t.vence), alertas: { '1d': a.includes('1d'), '3h': a.includes('3h'), '30m': a.includes('30m') }, avisar: !!t.avisar, repetir: !!t.repite };
 }
-P['nueva-tarea'] = () => {
+P['nueva-tarea'] = (q) => {
   if (S.editando) { S.editando = null; S.borrador = null; }
+  const l = lugarDe(q.get('lugar'));          // desde una etiqueta NFC: el lugar ya viene elegido
+  if (l && !S.borrador) { S.borrador = nuevoBorrador(); S.borrador.lugar = l.nombre; }
   return formularioTarea(false);
 };
 P['editar-tarea'] = (q, id) => {
@@ -33,6 +35,10 @@ function formularioTarea(edicion) {
         <span class="text-[12px] font-medium leading-4 ${sel ? 'text-acento-tea' : 'sec'}">${nombreCorto(id)}</span>
       </button>`;
   };
+  const lug = n => {
+    const sel = (b.lugar || 'Casa') === n;
+    return `<button type="button" role="radio" aria-checked="${sel}" data-accion="lugar-borrador" data-id="${n}" class="chip px-3 ${sel ? 'chip-activo' : ''}">${ic(n === 'Casa' ? 'casa' : lugarPorNombre(n).icono, 'size-[15px]')}${n === 'Casa' ? 'Toda la casa' : n}</button>`;
+  };
   const al = (k, txt) => `<button type="button" data-accion="alerta-borrador" data-id="${k}" aria-pressed="${b.alertas[k]}" class="chip px-3.5 ${b.alertas[k] ? 'chip-activo' : ''}">${ic(b.alertas[k] ? 'check' : 'mas', 'size-[15px]', 2)}${txt}</button>`;
   const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   const hhmm = d => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
@@ -50,6 +56,9 @@ function formularioTarea(edicion) {
             <input id="titulo-tarea" required maxlength="60" value="${esc(b.titulo)}" placeholder="Ej. Limpiar la cocina" class="min-w-0 flex-1 bg-transparent text-[15px] leading-[22px] outline-none placeholder:text-texto/70" />
           </span>
         </label>
+        <p id="lugar-t" class="micro tenue pt-1">Lugar</p>
+        <div class="sin-scroll -mx-5 flex gap-1.5 overflow-x-auto px-5 md:mx-0 md:flex-wrap md:px-0" role="radiogroup" aria-labelledby="lugar-t">${['Casa', ...LUGARES.map(l => l.nombre)].map(lug).join('')}</div>
+        ${lugarPorNombre(b.lugar) ? `<p class="flex items-center gap-1.5 text-[12px] leading-4 tenue">${ic('nfc', 'size-3.5', 2)}Aparecerá al tocar la etiqueta ${delLugar(lugarPorNombre(b.lugar))}.</p>` : ''}
         <p class="micro tenue pt-1">Asignar a</p>
         <div class="flex items-start justify-between gap-2">${opciones.map(per).join('')}</div>
         <p class="micro tenue pt-1">Fecha límite</p>
