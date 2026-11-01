@@ -311,3 +311,6 @@ begin
     perform public.registrar_cuenta('Bairon Fallas', 'bairon@roomies.cr', 'roomies2026');
   end if;
 end $$;
+
+-- Que la API vea las funciones nuevas sin esperar
+notify pgrst, 'reload schema';

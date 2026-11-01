@@ -306,10 +306,17 @@ const AUTH = {
     return cargarUsuario();
   },
   async registrar(nombre, correo, clave) {
-    // Cuenta confirmada al instante (RPC registrar_cuenta): sin correo de verificación, entra de una vez
-    const { error } = await NUBE.cliente.rpc('registrar_cuenta', { p_nombre: nombre, p_correo: correo, p_clave: clave });
+    // 1) Sin correos: la función registrar_cuenta crea la cuenta ya confirmada y se entra de una vez
+    const c = correo.trim().toLowerCase();
+    const { error: e1 } = await NUBE.cliente.rpc('registrar_cuenta', { p_nombre: nombre, p_correo: c, p_clave: clave });
+    if (!e1) return AUTH.entrar(c, clave);
+    if (!/registrar_cuenta|PGRST202|schema cache/i.test(e1.message + (e1.code || ''))) throw e1;
+    // 2) Si la función aún no está en la base: registro normal de Supabase Auth
+    const { data, error } = await NUBE.cliente.auth.signUp({ email: c, password: clave, options: { data: { nombre } } });
     if (error) throw error;
-    return AUTH.entrar(correo.trim().toLowerCase(), clave);
+    if (!data.session) throw new Error('confirmar-correo');
+    NUBE.sesion = data.session;
+    return cargarUsuario();
   },
   async salir() {
     await NUBE.cliente.auth.signOut();
@@ -345,7 +352,8 @@ const AUTH = {
 function mensajeError(e) {
   const m = (e && (e.message || e.error_description)) || '';
   if (/Invalid login credentials/i.test(m)) return 'Correo o contraseña incorrectos.';
-  if (/Email not confirmed/i.test(m)) return 'Confirma tu correo antes de entrar (revisa tu bandeja).';
+  if (/Email not confirmed|confirmar-correo/i.test(m)) return 'Esta cuenta todavía no está activada. Pide al administrador del proyecto que corra supabase/registro-sin-correo.sql.';
+  if (/email rate limit/i.test(m)) return 'Supabase no deja enviar más correos por ahora. Pide al administrador que corra supabase/registro-sin-correo.sql.';
   if (/already registered|already been registered/i.test(m)) return 'Ya existe una cuenta con ese correo. Inicia sesión.';
   if (/Password should be/i.test(m)) return 'La contraseña es muy corta (mínimo 8 caracteres).';
   if (/Correo no válido/i.test(m)) return 'Ese correo no parece válido. Revisa que tenga @ y un dominio.';

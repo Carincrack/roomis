@@ -54,3 +54,11 @@ Cada lugar de la casa (cocina, baño, sala, lavandería, basurero, patio) puede 
 - Sin etiquetas a mano, **Simular toque** recrea el gesto. En Chrome para Android (con HTTPS) aparecen **Leer una etiqueta** y **Grabar** (Web NFC). En los demás navegadores, el botón copia el enlace para grabarlo con una app como NFC Tools.
 - No hace falta cambiar la base: se usa la columna `lugar` que ya tenía `tareas`. Al crear una tarea se elige el lugar.
 - Para usar etiquetas reales, Roomies tiene que estar publicado en internet (por ejemplo, en GitHub Pages). El enlace de una copia local solo funciona en esa computadora.
+
+## Usar Roomies en otra computadora
+
+1. Copia la carpeta del proyecto, incluido el archivo `.env`. Si no lo tienes, copia `.env.example` como `.env` y llena `SUPABASE_URL` y `SUPABASE_PUBLISHABLE_KEY`.
+2. Haz doble clic en `iniciar.cmd`. Genera `js/config/supabase-config.js` a partir de `.env` y abre la app en el navegador. También puedes correr `node scripts/configurar.js` y abrir `index.html`.
+3. Si cambias la clave en Supabase, cambia solo `.env` y vuelve a correr el script.
+
+`.env` lleva solo la clave **publicable**. El script no acepta una clave secreta. `.env` está en `.gitignore`, así que no se sube a GitHub: pásalo por otro medio.

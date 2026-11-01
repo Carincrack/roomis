@@ -24,7 +24,13 @@ Object.assign(ACC, {
       try {
         const destino = await AUTH.registrar(nombre, correo, clave);
         location.hash = destino; aviso(`Cuenta creada. ¡Bienvenido, ${esc(nombre.split(' ')[0])}!`);
-      } catch (e) { errorCampo('registro-correo', mensajeError(e)); }
+      } catch (e) {
+        if (e.message !== 'confirmar-correo') { errorCampo('registro-correo', mensajeError(e)); return; }
+        // La cuenta sí se creó: pasa al login con el correo ya escrito
+        location.hash = '#/login';
+        setTimeout(() => { const c = document.getElementById('login-correo'); if (c) { c.value = correo; document.getElementById('login-clave')?.focus(); } }, 50);
+        aviso('Cuenta creada. Inicia sesión con tu correo y contraseña.');
+      }
     });
   },
 });
