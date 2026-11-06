@@ -4,4 +4,5 @@
 const SUPABASE_CONFIG = {
   url: "https://jidavqtjikclnsemiflr.supabase.co",
   clave: "sb_publishable_QSIrZKk4_tBnQ3TySrTkzQ_mov8ZH8k",
+  sitio: "https://roomis.vercel.app/",
 };

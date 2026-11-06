@@ -20,6 +20,9 @@ if (/^sb_secret_/.test(clave) || /service_role/.test(Buffer.from(clave.split('.'
   console.error('Esa es una clave SECRETA. En el navegador solo va la clave publicable (sb_publishable_…).');
   process.exit(1);
 }
+// Dirección pública de la app: el enlace de «¿Olvidaste tu contraseña?» siempre vuelve aquí, aunque se pida desde una copia local
+const sitio = (env.SITE_URL || 'https://roomis.vercel.app').replace(/\/*$/, '/');
+if (!/^https?:\/\/[^\s/]+\/$/.test(sitio)) { console.error('SITE_URL no es válida: ' + sitio); process.exit(1); }
 if (!clave) console.warn('Aviso: SUPABASE_PUBLISHABLE_KEY está vacía; el login avisará que falta configurar Supabase.');
 
 const salida = path.join(raiz, 'js', 'config', 'supabase-config.js');
@@ -29,6 +32,7 @@ fs.writeFileSync(salida, `// Generado por scripts/configurar.js a partir de .env
 const SUPABASE_CONFIG = {
   url: ${JSON.stringify(url.replace(/\/$/, ''))},
   clave: ${JSON.stringify(clave)},
+  sitio: ${JSON.stringify(sitio)},
 };
 `);
 console.log('Listo: js/config/supabase-config.js actualizado con los datos de .env');

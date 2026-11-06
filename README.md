@@ -61,4 +61,6 @@ Cada lugar de la casa (cocina, baño, sala, lavandería, basurero, patio) puede 
 2. Haz doble clic en `iniciar.cmd`. Genera `js/config/supabase-config.js` a partir de `.env` y abre la app en el navegador. También puedes correr `node scripts/configurar.js` y abrir `index.html`.
 3. Si cambias la clave en Supabase, cambia solo `.env` y vuelve a correr el script.
 
+`SITE_URL` (opcional, por defecto `https://roomis.vercel.app`) es la dirección a la que vuelve el enlace de «¿Olvidaste tu contraseña?». En Supabase, esa misma dirección debe estar en **Authentication → URL Configuration → Site URL**.
+
 `.env` lleva solo la clave **publicable**. El script no acepta una clave secreta. `.env` está en `.gitignore`, así que no se sube a GitHub: pásalo por otro medio.

@@ -21,14 +21,14 @@ function fuerzaClave(v) {
   if (v.length >= 12 || /[^a-z0-9]/i.test(v)) p++;
   return Math.max(1, p);
 }
-function pintarFuerza() {
-  const v = document.getElementById('registro-clave').value, f = fuerzaClave(v), el = document.getElementById('fuerza-clave');
+function pintarFuerza(idClave = 'registro-clave') {
+  const v = document.getElementById(idClave).value, f = fuerzaClave(v), el = document.getElementById('fuerza-clave');
   const col = ['bg-texto/15', 'bg-peligro', 'bg-alerta', 'bg-acento-teal'][f], txt = ['Mínimo 8 caracteres, con letras y números.', 'Débil: añade más caracteres.', 'Media: añade un símbolo o más longitud.', 'Fuerte'][f];
   el.innerHTML = `<span class="flex gap-1.5" aria-hidden="true">${[1, 2, 3].map(n => `<span class="h-1.5 flex-1 rounded-full ${n <= f ? col : 'bg-texto/15'}"></span>`).join('')}</span><span class="text-[12px] leading-4 ${f === 1 ? 'text-peligro' : 'tenue'}">${txt}</span>`;
 }
 /* ¿Las dos contraseñas coinciden? Se avisa en vivo con ícono y texto, no solo con color */
-function pintarCoincide() {
-  const a = document.getElementById('registro-clave').value, b = document.getElementById('registro-clave2').value, el = document.getElementById('coincide-clave');
+function pintarCoincide(idClave = 'registro-clave', idClave2 = 'registro-clave2') {
+  const a = document.getElementById(idClave).value, b = document.getElementById(idClave2).value, el = document.getElementById('coincide-clave');
   if (!b) { el.innerHTML = ''; return; }
   el.className = `flex min-h-4 items-center gap-1.5 text-[12px] font-medium leading-4 ${a === b ? 'text-acento-tea' : 'text-peligro'}`;
   el.innerHTML = a === b ? `${ic('check', 'size-3.5', 2.2)}Las contraseñas coinciden` : `${ic('x', 'size-3.5', 2.2)}Todavía no coinciden`;
@@ -139,7 +139,7 @@ P.registro = () => ({
   montar() {
     montarFoto(); pintarFuerza();
     document.getElementById('registro-clave').addEventListener('input', () => { pintarFuerza(); pintarCoincide(); });
-    document.getElementById('registro-clave2').addEventListener('input', pintarCoincide);
+    document.getElementById('registro-clave2').addEventListener('input', () => pintarCoincide());
     document.getElementById('registro-terminos').addEventListener('change', () => { const e = document.getElementById('err-terminos'); e.classList.add('hidden'); e.classList.remove('flex'); });
     document.getElementById('form-registro').addEventListener('submit', e => { e.preventDefault(); ACC['crear-cuenta'](); });
   },

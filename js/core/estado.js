@@ -23,6 +23,8 @@ const estadoInicial = () => ({
   filtroTareas: 'todas', buscar: '',
   filtroAvisos: 'todos',
   borrador: null, borradorGasto: null,
+  recuperando: false,              // entró con el enlace del correo: debe crear una contraseña nueva
+  enlaceVencido: false,            // el enlace del correo ya no sirve (se avisa en el login)
 });
 const S = estadoInicial();
 function reiniciarEstado() { const t = S.testimonio; Object.assign(S, estadoInicial(), { testimonio: t }); }

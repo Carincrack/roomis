@@ -318,6 +318,11 @@ const AUTH = {
     NUBE.sesion = data.session;
     return cargarUsuario();
   },
+  async cambiarClave(clave) {
+    const { error } = await NUBE.cliente.auth.updateUser({ password: clave });
+    if (error) throw error;
+    S.recuperando = false;
+  },
   async salir() {
     await NUBE.cliente.auth.signOut();
     if (NUBE.canalPropio) NUBE.cliente.removeChannel(NUBE.canalPropio);
@@ -352,6 +357,9 @@ const AUTH = {
 function mensajeError(e) {
   const m = (e && (e.message || e.error_description)) || '';
   if (/Invalid login credentials/i.test(m)) return 'Correo o contraseña incorrectos.';
+  if (/different from the old password/i.test(m)) return 'La contraseña nueva debe ser distinta a la anterior.';
+  if (/only request this after/i.test(m)) return 'Espera un minuto antes de pedir otro enlace.';
+  if (/session missing|session_not_found/i.test(m)) return 'Ese enlace ya venció. Pide uno nuevo desde «¿Olvidaste tu contraseña?».';
   if (/Email not confirmed|confirmar-correo/i.test(m)) return 'Esta cuenta todavía no está activada. Pide al administrador del proyecto que corra supabase/registro-sin-correo.sql.';
   if (/email rate limit/i.test(m)) return 'Supabase no deja enviar más correos por ahora. Pide al administrador que corra supabase/registro-sin-correo.sql.';
   if (/already registered|already been registered/i.test(m)) return 'Ya existe una cuenta con ese correo. Inicia sesión.';
@@ -363,14 +371,22 @@ function mensajeError(e) {
   return m || 'Algo salió mal. Inténtalo de nuevo.';
 }
 
+/* Lo que Supabase deja en la dirección al volver del correo. Se lee antes de crear el cliente, porque él la limpia */
+function leerEnlaceCorreo() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  return { recuperar: p.get('type') === 'recovery', fallo: p.has('error_code') || p.has('error') };
+}
+
 /* ---------- Arranque ---------- */
 async function iniciarNube() {
   if (!SUPABASE_CONFIG.clave || !window.supabase) { ponerEstado('local'); NUBE.listo = true; refrescar(); return; }
   ponerEstado('conectando');
+  const enlace = leerEnlaceCorreo();
   NUBE.cliente = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.clave);
   try {
     const { data } = await NUBE.cliente.auth.getSession();
     NUBE.sesion = data.session;
+    S.recuperando = enlace.recuperar && !!NUBE.sesion;
     if (NUBE.sesion) await cargarUsuario();      // el router decide a qué pantalla ir según el estado
     if (!NUBE.canal) ponerEstado('en-vivo');
   } catch (e) {
@@ -379,5 +395,7 @@ async function iniciarNube() {
     aviso(mensajeError(e), 'peligro');
   }
   NUBE.listo = true;
+  S.enlaceVencido = enlace.fallo || (enlace.recuperar && !NUBE.sesion);
   refrescar();
+  if (S.enlaceVencido && NUBE.sesion) aviso('Ese enlace ya venció. Pide uno nuevo si lo necesitas.', 'alerta');
 }

@@ -31,6 +31,9 @@ P.login = () => ({
             <h1 class="font-serif text-[32px] font-medium leading-10 tracking-[-0.01em] md:text-[36px]">Bienvenido de nuevo</h1>
             <p class="text-[15px] leading-[22px] sec">Entra para ver las tareas y los gastos de tu hogar.</p>
           </div>
+          ${S.enlaceVencido ? `
+          <p class="flex items-start gap-2.5 rounded-2xl border border-alerta/40 bg-alerta/[0.08] p-3.5 text-[13px] leading-[18px] sec" role="alert">
+            <span class="text-alerta">${ic('alerta', 'size-[18px]')}</span>Ese enlace ya venció o ya se usó. Pide uno nuevo con «¿Olvidaste tu contraseña?».</p>` : ''}
           ${NUBE.listo && NUBE.estado === 'local' ? `
           <p class="flex items-start gap-2.5 rounded-2xl border border-alerta/40 bg-alerta/[0.08] p-3.5 text-[13px] leading-[18px] sec" role="alert">
             <span class="text-alerta">${ic('alerta', 'size-[18px]')}</span>Falta la clave de Supabase en <code class="text-texto">js/config/supabase-config.js</code>. Sin ella no se puede iniciar sesión.</p>` : `

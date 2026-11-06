@@ -33,6 +33,7 @@ function tomarVuelta(destino) {
 function destinoPermitido(nombre) {
   if (!NUBE.listo) return PUBLICAS.has(nombre) ? null : 'cargando';
   if (!NUBE.sesion) { if (nombre === 'nfc') recordarVuelta(); return PUBLICAS.has(nombre) ? null : '#/login'; }
+  if (S.recuperando) return nombre === 'nueva-clave' ? null : '#/nueva-clave';
   const casa = tieneHogar() ? '#/inicio' : S.miEstado === 'pendiente' ? '#/esperando' : '#/bienvenida';
   if (nombre === 'login' || nombre === 'registro') return casa;
   if (APP.has(nombre)) return tieneHogar() ? null : casa;

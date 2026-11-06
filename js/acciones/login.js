@@ -37,11 +37,21 @@ Object.assign(ACC, {
     const c = document.getElementById('recuperar-correo').value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c)) { errorCampo('recuperar-correo', 'Escribe un correo válido para enviarte el enlace.'); return; }
     if (!NUBE.cliente) { aviso('Falta configurar Supabase', 'peligro'); return; }
-    NUBE.cliente.auth.resetPasswordForEmail(c).then(({ error }) => {
-      if (error) { errorCampo('recuperar-correo', mensajeError(error)); return; }
-      cerrarModal(); aviso(`Si existe una cuenta con ${esc(c)}, te llegará un enlace para cambiar la contraseña.`);
+    NUBE.cliente.auth.resetPasswordForEmail(c, { redirectTo: SUPABASE_CONFIG.sitio }).then(({ error }) => {
+      if (error) { errorCampo('recuperar-correo', /email rate limit/i.test(error.message) ? 'Ya se enviaron varios correos. Espera un rato e inténtalo de nuevo.' : mensajeError(error)); return; }
+      S.enlaceVencido = false; cerrarModal(); refrescar(); aviso(`Si existe una cuenta con ${esc(c)}, te llegará un enlace para cambiar la contraseña.`);
     });
   },
+  'guardar-clave': () => {
+    const clave = document.getElementById('nueva-clave').value, clave2 = document.getElementById('nueva-clave2').value;
+    if (clave.length < 8 || !/[a-z]/i.test(clave) || !/\d/.test(clave)) { errorCampo('nueva-clave', 'Usa al menos 8 caracteres, con letras y números.'); return; }
+    if (clave2 !== clave) { errorCampo('nueva-clave2', 'Las contraseñas no coinciden. Vuelve a escribirla.'); return; }
+    conCarga(document.getElementById('btn-clave'), 'Guardando…', async () => {
+      try { await AUTH.cambiarClave(clave); location.hash = '#/inicio'; aviso('Contraseña actualizada'); }
+      catch (e) { errorCampo('nueva-clave', mensajeError(e)); }
+    });
+  },
+  'cancelar-clave': async () => { await AUTH.salir(); location.hash = '#/login'; },
   'login-google': () => aviso('Continuar con Google estará disponible pronto', 'alerta'),
 });
 function accionDinamicaLogin(nombre) {
